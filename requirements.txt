@@ -37,4 +37,4 @@ colorama==0.4.6
 contourpy==1.2.0
 cryptography==41.0.5
 cycler==0.12.1
-fonttools==4.44.0
+
