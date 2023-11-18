@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Realtime Data Plot</title>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="myChart" width="100" height="300"></canvas>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: []
+            },
+            options: {
+                scales: {
+                    x: [{
+                        type: 'linear',
+                        position: 'bottom',
+                        ticks: {
+                            stepSize: 5 // Adjust the step size to control the number of grid lines
+                        }
+                    }],
+                    y: [{
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            stepSize: 10 // Adjust the step size to control the number of grid lines
+                        }
+                    }]
+                },
+                responsive: true, // Make the chart responsive
+                maintainAspectRatio: false // Allow the chart to resize freely
+            }
+        });
+
+        socket.on('update_plot', function(data) {
+            var x_data = data.x_data['voltageData'];
+
+            myChart.data.datasets = [];
+
+            // Exclude 'SoC' from datasets
+            Object.keys(data.y_data).forEach(function(key) {
+                if (key !== 'SoC') {
+                    var y_data = data.y_data[key];
+
+                    myChart.data.datasets.push({
+                        label: key,
+                        data: y_data,
+                        borderColor: getRandomColor(),
+                        borderWidth: 1,
+                        fill: false
+                    });
+                }
+            });
+
+            myChart.data.labels = x_data;
+            myChart.update();
+        });
+
+        // Function to generate a random color
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+</body>
+</html>
