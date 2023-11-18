@@ -26,3 +26,5 @@ grpcio-status==1.59.2
 h11==0.14.0
 httplib2==0.22.0
 idna==3.4
+Flask-SocketIO==5.3.6
+firebase-admin==6.2.0
