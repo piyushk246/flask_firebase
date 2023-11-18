@@ -35,6 +35,5 @@ cffi==1.16.0
 charset-normalizer==3.3.2
 colorama==0.4.6
 contourpy==1.2.0
-cryptography==41.0.5
-cycler==0.12.1
+
 
