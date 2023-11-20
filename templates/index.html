@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Battery Data</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f2f2f2; /* Set your desired gray background color */
+        }
+
+        header {
+            background-color: #3498db; /* Set your desired background color */
+            color: #fff; /* Set the text color for better visibility */
+            padding: 10px; /* Add some padding to the header */
+            text-align: center;
+            max-width: 600px; /* Adjust the maximum width as needed */
+            width: 100%;
+        }
+
+        main {
+            text-align: center;
+            max-width: 600px; /* Adjust the maximum width as needed */
+            width: 100%;
+        }
+
+        img {
+            max-width: 100%; /* Make sure the image doesn't exceed its container */
+            border: 2px solid #333; /* Set your desired border properties */
+            border-radius: 8px; /* Optional: Add rounded corners to the border */
+        }
+
+        main section p {
+            background-color: #e74c3c; /* Set your desired red background color */
+            color: #fff; /* Set the text color for better visibility */
+            padding: 10px; /* Add some padding to the paragraph */
+        }
+    </style>
+    <!-- Add any additional head elements (stylesheets, scripts, etc.) here -->
+    <meta http-equiv="refresh" content="50">
+</head>
+<body>
+    <header>
+        <h1>Real-time battery data plot</h1>
+        <!-- Add navigation or other header content here -->
+    </header>
+
+    <main>
+        <section>
+            <h2></h2>
+            <p>This is a sample collected by BMS team</p>
+        </section>
+
+        <!-- Add the Matplotlib plot here -->
+        <section>
+            <img src="data:image/png;base64,{{ img_data }}" alt="Matplotlib Plot">
+        </section>
+
+        <!-- Add more sections as needed -->
+
+    </main>
+
+    <!-- Add any additional scripts or other elements before the closing </body> tag -->
+
+</body>
+</html>
