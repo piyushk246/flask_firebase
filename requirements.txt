@@ -21,3 +21,4 @@ googleapis-common-protos==1.61.0
 grpcio==1.59.3
 grpcio-status==1.59.3
 firebase-admin==6.2.0
+schedule==1.2.1
