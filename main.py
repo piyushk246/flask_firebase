@@ -7,6 +7,8 @@ from firebase_admin import credentials, initialize_app, db
 import threading
 import time
 import schedule
+import matplotlib.pyplot as plt
+import select
 
 app = Flask(__name__)
 
@@ -17,12 +19,17 @@ initialize_app(cred, {'databaseURL': "https://mitapp-8fd20-default-rtdb.firebase
 # Reference to your Firebase database
 ref = db.reference('/')
 
-# Initialize empty lists for x and y data
-data = {key: {'x': [], 'y': []} for key in ['voltageData', 'currentData', 'TemperatureData', 'SoCData', 'SoPData', 'SoFData', 'SoHData']}
+# Define the order and custom labels for the graphs
+parameter_order = ['voltageData', 'currentData', 'TemperatureData', 'SoCData', 'SoFData', 'SoHData', 'SoPData']
+parameter_labels = {'voltageData': 'Voltage', 'currentData': 'Current', 'TemperatureData': 'Temperature',
+                    'SoCData': 'SoC', 'SoFData': 'SoF', 'SoHData': 'SoH', 'SoPData': 'SoP'}
 
-# Create a Matplotlib Figure and Axis
-fig = Figure(figsize=(8, 6), dpi=100)
-ax = fig.add_subplot(111)
+# Initialize empty lists for x and y data
+data = {key: {'x': [], 'y': []} for key in parameter_order}
+
+# Create a Matplotlib Figure and Axes for each parameter
+fig, axs = plt.subplots(len(data), 1, figsize=(8, 6), dpi=100, sharex=True)
+fig.subplots_adjust(hspace=0.5)
 
 # Create a FigureCanvasAgg to render the figure
 canvas = FigureCanvasAgg(fig)
@@ -30,18 +37,18 @@ canvas = FigureCanvasAgg(fig)
 def update_plot():
     try:
         value = ref.get()
-        for key, values in value.items():
+        for i, key in enumerate(parameter_order):
+            values = value.get(key, [])  # Use get() to handle missing keys gracefully
             x_value = list(range(len(values)))
             y_value = values
 
             data[key]['x'] = x_value
             data[key]['y'] = y_value
 
-        # Clear the existing plot and redraw it with new data
-        ax.clear()
-        for key in data.keys():
-            ax.plot(data[key]['x'], data[key]['y'], label=key)
-        ax.legend()
+            # Clear the existing plot and redraw it with new data
+            axs[i].clear()
+            axs[i].plot(data[key]['x'], data[key]['y'])
+            axs[i].set_title(parameter_labels[key])
 
         # Draw the figure on the canvas
         canvas.draw()
@@ -75,7 +82,6 @@ def index():
 
     print("Rendering template")
     return render_template('index.html', img_data=img_data)
-schedule.every(5).seconds.do(job)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
